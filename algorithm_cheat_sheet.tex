@@ -1,0 +1,582 @@
+\documentclass[twocolumn]{article}
+%\documentclass{article}
+
+\usepackage{clrscode3e}
+\usepackage[margin=15mm]{geometry}
+\usepackage[colorlinks, linkcolor=blue]{hyperref}
+
+\begin{document}
+\begin{center}
+     \Large{\textbf{Algorithms Cheat Sheet}} \\
+\end{center}
+We use the clrscode3e package in \LaTeX\ to typeset pseudocode of most algorithms in \textbf{Introduction to Algorithms} (\emph{Third edition}, by \emph{Cormen}, \emph{Leiserson}, \emph{Rivest}, and \emph{Stein}) for quick reference. \\
+1. \hyperref[sorting]{Sorting} \\
+2. \hyperref[data_structures]{Data Structures} \\
+3. \hyperref[graph]{Graph Algorithms}
+
+%\begin{codebox}
+%\Procname{$\proc{}$}
+%\end{codebox}
+
+\section{Sorting}
+\label{sorting}
+\subsection{Bubble Sort (pg.40)}
+\begin{codebox}
+\Procname{$\proc{BubbleSort}(A)$}
+\li \For $i \gets 1 \To \attrib{A}{length}-1$
+\li \Do \For $j \gets \attrib{A}{length} \Downto i+1$
+\li     \Do \If $A[j] < A[j-1]$
+\li 			\Then exchange $A[j]$ with $A[j-1]$
+			\End
+		\End
+	\End
+\end{codebox}
+
+\subsection{Selection Sort (pg.29)}
+\begin{codebox}
+\Procname{$\proc{Selection-Sort}(A)$}
+\li \For $i \gets 1 \To \attrib{A}{length}-1$
+\li \Do 	\For $j \gets i \To \attrib{A}{length}$
+\li 		\Do select the smallest $A[j]$
+\li 			exchange $A[j]$ with $A[i]$
+		\End
+	\End
+\end{codebox}
+
+\subsection{Insertion Sort (pg.16)}
+\begin{codebox}
+\Procname{$\proc{Insertion-Sort}(A)$}
+\li \For $j \gets 2 \To \attrib{A}{length}$
+\li \Do $\id{key} \gets A[j]$
+\li 		\Comment Insert $A[j]$ into sorted $A[1 \twodots j-1]$.
+\li 		$i = j - 1$
+\li 		\While $i > 0$ and $A[i] > \id{key}$
+\li 		\Do $A[i+1] \gets A[i]$
+\li 			$i \gets i-1$
+		\End
+\li 		$A[i+1] \gets \id{key}$
+	\End
+\end{codebox}
+
+\subsection{Merge Sort (pg.31)}
+\begin{codebox}
+\Procname{$\proc{Merge-Sort}(A,p,r)$}
+\li \If $p < r$
+\li \Then $q \gets \lfloor (p+r)/2 \rfloor $
+\li 		$\proc{Merge-Sort}(A,p,q)$
+\li 		$\proc{Merge-Sort}(A,q+1,r)$
+\li 		$\proc{Merge}(A,p,q,r)$
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Merge}(A,p,q,r)$}
+\li $n_i \gets q-p+1$
+\li $n_2 \gets r-q$
+\li new arrays $L[1 \twodots n_i+1]$ and $R[1 \twodots n_2+1]$
+\li \For $i \gets 1 \To n_1$
+\li \Do $L[i] \gets A[p+i-1]$
+    \End
+\li \For $j \gets 1 \To n_2$
+\li \Do $R[j] \gets A[q+j]$
+	\End
+\li $L[n_1+1] \gets \infty$
+\li $R[n_2+1] \gets \infty$
+\li $i \gets 1$
+\li $j \gets 1$
+\li \For $k \gets p \To r$
+\li \Do \If $L[i] \le R[j]$
+\li 		\Then $A[k] \gets L[i]$
+\li 			  $i \gets i+1$
+\li 		\Else $A[k] \gets R[j]$
+\li 			  $j \gets j+1$
+		\End
+	\End
+\end{codebox}
+
+\subsection{Heap Sort (pg.151)}
+\begin{codebox}
+\Procname{$\proc{Parent}(i)$}
+\li \Return $\lfloor i/2 \rfloor $
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Left}(i)$}
+\li \Return $2i$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Right}(i)$}
+\li \Return $2i+1$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Max-Heapify}(A,i)$}
+\li $l = \proc{Left}(i)$
+\li $r = \proc{Right}(i)$
+\li \If $l \le \attrib{A}{heap-size}$ and $A[l] > A[i]$
+\li \Then $\id{largest} \gets l$
+\li \Else $\id{largets} \gets i$
+	\End
+\li \If $r \le \attrib{A}{heap-size}$ and $A[r] > A[\id{largest}]$
+\li \Then $\id{largest} \gets r$
+	\End
+\li \If $\id{largest} \neq i$
+\li \Then exchange $A[i]$ with $A[\id{largest}]$
+\li 		  $\proc{Max-Heapify}(A,\id{largest})$
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Build-Max-Heap}(A)$}
+\li $\attrib{A}{heap-size} \gets \attrib{A}{length}$
+\li \For $i \gets \lfloor\attrib{A}{length}/2\rfloor \Downto 1$
+\li \Do $\proc{Max-Heapify}(A,i)$
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{HeapSort}(A)$}
+\li $\proc{Build-Max-Heap}(A)$
+\li \For $i \gets \attrib{A}{length} \Downto 2$
+\li \Do exchange $A[1]$ with $A[i]$
+\li 		$\attrib{A}{heap-size} \gets \attrib{A}{heap-size} - 1$
+\li 		$\proc{Max-Heapify}(A,1)$
+	\End
+\end{codebox}
+
+\subsection{Quick Sort (pg.170)}
+\begin{codebox}
+\Procname{$\proc{QuickSort}(A,p,r)$}
+\li \If $p < r$
+\li \Do q = $\proc{Partition}(A,p,r)$
+\li 		$\proc{QuickSort}(A,p,q-1)$
+\li 		$\proc{QuickSort}(A,q+1,r)$
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Partition}(A,p,r)$}
+\li $\id{pivot} \gets A[r]$
+\li $i = p$
+\li $j = r-1$
+\li \While $i \neq j$
+\li \Do \If $i < \id{pivot}$
+\li 		\Then $i \gets i+1$
+\li 		\Else exchange $A[i]$ with $A[j]$
+\li 			  $j \gets j-1$
+		\End
+	\End
+\li exchange $A[i]$ with $A[r]$
+\li \Return $i$
+\end{codebox}
+
+\subsection{Counting Sort (pg.194)}
+\begin{codebox}
+\Procname{$\proc{Counting-Sort}(A,B,k)$}
+\li let $C[0 \twodots k]$ be a new array
+\li \For $i \gets 0 \To k$
+\li \Do $C[i] \ gets 0$
+	\End
+\li \For $j \gets 1 \To \attrib{A}{length}$
+\li \Do $C[A[j]] \gets C[A[j]] + 1$
+	\End
+\li \Comment C[i] now contains number of elements $= i$.
+\li \For $i \gets 1 \To k$
+\li \Do $C[i] \gets C[i] + C[i-1]$
+	\End
+\li \Comment $C[i]$ now contains number of elements $\le i$.
+\li \For $j \gets \attrib{A}{length} \Downto 1$
+\li \Do $B[C[A[j]]] \gets A[j]$
+\li 		$C[A[j]] \gets C[A[j]] - 1$
+	\End
+\end{codebox}
+
+\subsection{Radix Sort (pg.197)}
+\begin{codebox}
+\Procname{$\proc{Radix-Sort}(A,d)$}
+\li \For $i \gets 1 \To d$
+\li \Do use a stable sort to sort array $A$ on digit $i$.
+	\End
+\end{codebox}
+
+\subsection{Bucket Sort (pg.200)}
+\begin{codebox}
+\Procname{$\proc{Bucket-Sort}(A)$}
+\li let $B[0 \twodots n-1]$ be a new array
+\li $n \gets \attrib{A}{length}$
+\li \For $i \gets 0 \To n-1$
+\li \Do make $B[i]$ an empty list
+	\End
+\li \For $i \gets 1 \To n$
+\li \Do insert $A[i]$ into list $B[\lfloor nA[i]\rfloor ]$
+	\End
+\li \For $i \gets 1 \To n-1$
+\li \Do sort list $B[i]$ with insertion sort
+	\End
+\li concatenate lists $B[0]$, $B[1]$, \dots , $B[n-1]$ in order
+\end{codebox}
+
+\section{Data Structures}
+\label{data_structures}
+\subsection{Stacks (pg.233)}
+\begin{codebox}
+\Procname{$\proc{Stack-Empty}(S)$}
+\li \If $\attrib{S}{top} \isequal 0$
+\li \Then \Return \const{true}
+\li \Else \Return \const{false}
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Push}(S,x)$}
+\li $\attrib{S}{top} \gets \attrib{S}{top}+1$
+\li $S[\attrib{S}{top}] \gets x$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Pop}(S)$}
+\li \If $\proc{Stack-Empty}(S)$
+\li \Then \Error "underflow"
+\li \Else $\attrib{S}{top} \gets \attrib{S}{top}-1$
+\li \Return $S[\attrib{S}{top}+1]$
+	\End
+\end{codebox}
+
+\subsection{Queues (pg.234)}
+\begin{codebox}
+\Procname{$\proc{Enqueue}(Q,x)$}
+\li $Q[\attrib{Q}{tail}] \gets x$
+\li \If $\attrib{Q}{tail} \isequal \attrib{Q}{length}$
+\li \Then $\attrib{Q}{tail} \gets 1$
+\li \Else $\attrib{Q}{tail} \gets \attrib{Q}{tail} + 1$
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Dequeue}(Q)$}
+\li $x \gets Q[\attrib{Q}{head}]$
+\li \If $\attrib{Q}{head} \isequal \attrib{Q}{length}$
+\li \Then $\attrib{Q}{head} \gets 1$
+\li \Else $\attrib{Q}{head} \gets \attrib{Q}{head} + 1$
+	\End
+\li \Return $x$
+\end{codebox}
+
+\subsection{Linked Lists (pg.236)}
+\begin{codebox}
+\Procname{$\proc{List-Search}(L,k)$}
+\li $x \gets \attrib{L}{head}$
+\li \While $x \neq \id{NIL}$ and $\attrib{x}{key} \neq k$
+\li \Do $x \gets \attrib{x}{next}$
+	\End
+\li \Return x
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{List-Insert}(L,x)$}
+\li $\attrib{x}{next} \gets \attrib{L}{head}$
+\li \If $\attrib{L}{head} \neq \id{NIL}$
+\li \Then $\attribb{L}{head}{prev} \gets x$
+	\End
+\li $\attrib{L}{head} \gets x$
+\li $\attrib{x}{prev} \gets \id{NIL}$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{List-Delete}(L,x)$}
+\li \If $\attrib{x}{prev} \neq \id{NIL}$
+\li \Then $\attribb{x}{prev}{next} \gets \attrib{x}{next}$
+\li \Else $\attrib{L}{head} \gets \attrib{x}{next}$
+	\End
+\li \If $\attrib{x}{next} \neq \id{NIL}$
+\li \Then $\attribb{x}{next}{prev} \gets \attrib{x}{prev}$
+	\End
+\end{codebox}
+
+\subsection{Binary Search Tree (pg.286)}
+\begin{codebox}
+\Procname{$\proc{Tree-Search}(x,k)$}
+\li \If $x \isequal \id{NIL}$ or $k \isequal \attrib{x}{key}$
+\li \Then \Return $x$
+	\End
+\li \If $k < \attrib{x}{key}$
+\li \Then \Return $\proc{Tree-Search}(\attrib{x}{left},k)$
+\li \Else \Return $\proc{Tree-Search}(\attrib{x}{right},k)$
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Iterative-Tree-Search}(x,k)$}
+\li \While $x \neq \id{NIL}$ and $k \neq \attrib{x}{key}$
+\li \Do \If $k < \attrib{x}{key}$
+\li 		\Then $x \gets \attrib{x}{left}$
+\li 		\Else $x \gets \attrib{x}{right}$
+		\End
+	\End
+\li \Return $x$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Tree-Minimum}(x)$}
+\li \While $\attrib{x}{left} \neq \id{NIL}$
+\li \Do $x \gets \attrib{x}{left}$
+	\End
+\li \Return $x$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Tree-Maximum}(x)$}
+\li \While $\attrib{x}{right} \neq \id{NIL}$
+\li \Do $x \gets \attrib{x}{right}$
+	\End
+\li \Return $x$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Tree-Successor}(x)$}
+\li \While $\attrib{x}{right} \neq \id{NIL}$
+\li \Do \Return $\proc{Tree-Minimum}(\attrib{x}{right})$
+	\End
+\li $y \gets \attrib{x}{p}$
+\li \While $y \neq \id{NIL}$ and $\attrib{y}{right} \isequal x$
+\li \Do $x \gets y$
+\li 		$y \gets \attrib{y}{p}$
+	\End
+\li \Return $y$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Tree-Predecessor}(x)$}
+\li \Comment Symmetric to \proc{Tree-Successor}
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Tree-Insert}(T,z)$}
+\li $y \gets \id{NIL}$
+\li $x \gets \attrib{T}{root}$
+\li \While $x \neq \id{NIL}$
+\li 		\Do $y \gets x$
+\li 		\If $\attrib{z}{key} < \attrib{x}{key}$
+\li 		\Then $x \gets \attrib{x}{left}$
+\li 		\Else $x \gets \attrib{x}{right}$
+		\End
+	\End
+\li $\attrib{z}{p} \gets y$
+\li \If $y \isequal \id{NIL}$
+\li \Then $\attrib{T}{root} \gets z$ \>\>\>\Comment tree $T$ was empty
+\li \ElseIf $\attrib{z}{key} < \attrib{y}{key}$
+\li \Then $\attrib{y}{left} \gets z$
+\li \Else $\attrib{y}{right} \gets z$
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{TransPlant}(T,u,v)$}
+\li \If $\attrib{u}{p} \isequal \id{NIL}$
+\li \Do $\attrib{T}{root} \gets v$
+\li \ElseIf $\attribb{u}{p}{left} \isequal u$
+\li \Do $\attribb{u}{p}{left} \gets v$
+\li \Else $\attribb{u}{p}{right} \gets v$
+	\End
+\li \If $v \neq \id{NIL}$
+\li \Then $\attrib{v}{p} \gets \attrib{u}{p}$
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Tree-Delete}(T,z)$}
+\li \If $\attrib{z}{left} \isequal \id{NIL}$
+\li \Then $\proc{TransPlant}(T,z,\attrib{z}{right})$
+\li \ElseIf $\attrib{z}{right} \isequal \id{NIL}$
+\li \Then $\proc{TransPlant}(T,z,\attrib{z}{left})$
+\li \Else $y \gets \proc{Tree-Minimum}(\attrib{z}{right})$
+\li 		\If $\attrib{y}{p} \neq z$
+\li 		\Then $\proc{TransPlat}(T,y,\attrib{y}{right})$
+\li 		$\attrib{y}{right} \gets \attrib{z}{right}$
+\li 		$\attribb{y}{right}{p} \gets y$
+		\End
+\li $\proc{TransPlant}(T,z,y)$
+\li $\attrib{y}{left} \gets \attrib{z}{left}$
+\li $\attribb{y}{left}{p} \gets y$
+	\End
+\end{codebox}
+
+\section{Graph Algorithms}
+\label{graph}
+\subsection{Elementary Graph Algorithms(pg.589)}
+\begin{codebox}
+\Procname{$\proc{BFS}(G,s)$}
+\li \For each vertex $u \in \attrib{G}{V} - \{ s\}$
+\li \Do $\attrib{u}{color} \gets \id{WHITE}$
+\li 		$\attrib{u}{d} \gets \infty$
+\li 		$\attrib{u}{\pi} \gets \id{NIL}$
+	\End
+\li $\attrib{s}{color} \gets \id{GRAY}$
+\li $\attrib{s}{d} \gets 0$
+\li $\attrib{s}{\pi} \gets \id{NIL}$
+\li $Q \gets \emptyset$
+\li $\proc{Enqueue}(Q,s)$
+\li \While $Q \neq \emptyset$
+\li 		\Do $u \gets \proc{Dequeue}(Q)$
+\li 		\For each $v \in \attrib{G}{Adj[u]}$
+\li 			\Do \If $\attrib{v}{color} \isequal \id{WHITE}$
+\li 				\Then $\attrib{v}{color} \gets \id{GRAY}$
+\li 					  $\attrib{v}{d} \gets \attrib{u}{d} + 1$
+\li 					  $\attrib{v}{\pi} \gets u$
+\li 					  $\proc{Enqueue}(Q,v)$
+				\End
+		\End
+\li 		$\attrib{u}{color} \gets \id{BLACK}$
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{DFS}(G)$}
+\li \For each vertex $u \in \attrib{G}{V}$
+\li 	\Do $\attrib{u}{color} \gets \id{WHITE}$
+\li 		$\attrib{u}{\pi} \gets \id{NIL}$
+	\End
+\li $\id{time} \gets 0$
+\li \For each vertex $u \in \attrib{G}{V}$
+\li \Do \If $\attrib{u}{color} \isequal \id{WHITE}$
+\li 		\Then $\proc{DFS-Visit}(G,u)$
+		\End
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{DFS-Visit}(G,u)$}
+\li $\id{time} \gets \id{time} + 1$ \>\>\>\> \Comment white vertex $u$ is discovered
+\li $\attrib{u}{d} \gets \id{time}$
+\li $\attrib{u}{color} \gets \id{GRAY}$
+\li \For each $v \in \attrib{G}{Adj[u]}$ \>\>\>\>\> \Comment explore edge $(u,v)$
+\li \Do \If $\attrib{v}{color} \isequal \id{WHITE}$
+\li 		\Then $\attrib{v}{\pi} \gets u$
+\li 		$\proc{DFS-Visit}(G,v)$
+		\End
+	\End
+\li $\attrib{u}{color} \gets \id{BLACK}$ \>\>\>\>\> \Comment blacken $u$; it is finished
+\li $\id{time} \gets \id{time} + 1$
+\li $\attrib{u}{f} \gets \id{time}$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Topological-Sort}(G)$}
+\li call $\proc{DFS}(G)$ to compute $\attrib{v}{f}$ for each vertex $v$
+\li as each vertex is finished, insert it onto the front 
+\zi of a linked list
+\li \Return the linked list of vertices
+\end{codebox}
+
+\subsection{Minimum Spanning Trees (pg.624)}
+\begin{codebox}
+\Procname{$\proc{Generic-MST}(G,w)$}
+\li $A \gets \emptyset$
+\li \While A does not form a spanning tree
+\li \Do find an edge $(u,v)$ that is safe for $A$
+\li 		$A \gets A \cup \{ (u,v)\}$
+	\End
+\li \Return $A$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{MST-Kruskal}(G,w)$}
+\li $A \gets \emptyset$
+\li \For each vertex $v \in \attrib{G}{V}$
+\li \Do \Comment several disjoint sets of elements
+\li 		$\proc{Make-Set}(v)$
+	\End
+\li sort edges of $\attrib{G}{E}$ into nondecreasing order by weight
+\li \For each edge $(u,v) \in \attrib{G}{E}$ (in nondecreasing order)
+\li \Do \Comment $\proc{Find-Set}(u)$ returns which set that contains $u$
+\li 		\If $\proc{Find-Set}(u) \neq \proc{Find-Set}(v)$
+\li 		\Then $A \gets A \cup \{ (u,v)\}$
+\li 			  $\proc{Union}(u,v)$
+		\End
+	\End
+\li \Return $A$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{MST-Prim}(G,w,r)$}
+\li \For each $u \in \attrib{G}{V}$
+\li \Do \Comment $\attrib{v}{key}$ is min $w$ connecting $v$ to a vertex in tree
+\li 		$\attrib{u}{key} \gets \infty$
+\li 		$\attrib{u}{\pi} \gets \id{NIL}$
+	\End
+\li $\attrib{r}{key} \gets 0$
+\li $Q = \attrib{G}{V}$
+\li \While $Q \neq \emptyset$
+\li \Do $u \gets \proc{Extract-Min}(Q)$
+\li 		\For each $v \in \attrib{G}{Adj[u]}$
+\li 		\Do \If $v \in Q$ and $w(u,v) < \attrib{v}{key}$
+\li 			\Then $\attrib{v}{\pi} \gets u$
+\li 				  $\attrib{v}{key} \gets w(u,v)$
+			\End
+		\End
+	\End
+\end{codebox}
+
+\subsection{Single-Source Shortest Paths (pg.643)}
+\begin{codebox}
+\Procname{$\proc{Initialize-Single-Source}(G,s)$}
+\li \For each vertex $v \in \attrib{G}{V}$
+\li \Do $\attrib{v}{d} \gets \infty$
+\li 		$\attrib{v}{\pi} \gets \id{NIL}$
+	\End
+\li $\attrib{s}{d} \gets 0$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Relax}(u,v,w)$}
+\li \If $\attrib{v}{d} > \attrib{u}{d} + w(u,v)$
+\li \Do $\attrib{v}{d} = \attrib{u}{d} + w(u,v)$
+\li 		$\attrib{v}{\pi} \gets u$
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Bellman-Ford}(G,w,s)$}
+\li $\proc{Initialize-Single-Source}(G,s)$
+\li \For $i \gets 1 \To \vert \attrib{G}{V}\vert -1$
+\li \Do \For each edge $(u,v) \in \attrib{G}{E}$
+\li 		\Do $\proc{Relax}(u,v,w)$
+		\End
+	\End
+\li \Comment returns \id{TRUE} $\iff$ $G$ contains no negative-weight 
+\zi cycles reachable from $s$
+\li \For each edge $(u,v) \in \attrib{G}{E}$
+\li \Do \If $\attrib{v}{d} > \attrib{u}{d} + w(u,v)$
+\li 		\Then \Return \id{FALSE}
+		\End
+	\End
+\li \Return \id{TRUE}
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{DAG-Shortest-Paths}(G,w,s)$}
+\li topologically sort the vertices of $G$
+\li $\proc{Initialize-Single-Source}(G,s)$
+\li \For each vertex $u$, taken in topologically sorted order
+\li \Do \For each vertex $v \in \attrib{G}{Adj[u]}$
+\li 		\Do $\proc{Relax}(u,v,w)$
+		\End
+	\End
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Dijkstra}(G,w,s)$}
+\li $\proc{Initialize-Single-Source}(G,s)$
+\li $S \gets \emptyset$
+\li $Q \gets \attrib{G}{V}$
+\li \While $Q \neq \emptyset$
+\li \Do $u \gets \proc{Extract-Min(Q)}$
+\li 		$S \gets S \cup \{ u\}$
+\li 		\For each vertex $v \in \attrib{G}{Adj[u]}$
+\li 		\Do $\proc{Relax}(u,v,w)$
+		\End
+	\End
+\end{codebox}
+
+\end{document}
